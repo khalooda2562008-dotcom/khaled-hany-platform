@@ -1,0 +1,27 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+config.local.js
+
+# Dependencies and build output
+node_modules/
+dist/
+.cache/
+.vite/
+
+# Local runtime / test output
+*.log
+.DS_Store
+Thumbs.db
+playwright-report/
+test-results/
+
+# Supabase local state
+supabase/.temp/
+supabase/.branches/
+
+# Never commit downloaded private backups
+backups/
+*.dump
+*.sql.gz

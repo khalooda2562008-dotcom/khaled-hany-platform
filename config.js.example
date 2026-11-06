@@ -1,0 +1,6 @@
+// Copy this file to config.js and add only the public Supabase Project URL + anon/publishable key.
+// Never place service_role, Resend, AI, Pexels, Pixabay, or Unsplash secret keys here.
+window.KH_CONFIG = {
+  supabaseUrl: 'https://YOUR-PROJECT.supabase.co',
+  supabaseAnonKey: 'YOUR_PUBLIC_ANON_OR_PUBLISHABLE_KEY'
+};
