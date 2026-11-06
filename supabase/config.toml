@@ -1,0 +1,13 @@
+project_id = "replace-with-your-project-ref"
+
+[functions.contact]
+verify_jwt = false
+
+[functions.asset-search]
+verify_jwt = true
+
+[functions.invite-user]
+verify_jwt = true
+
+[functions.ai-assist]
+verify_jwt = true
