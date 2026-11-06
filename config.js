@@ -2,6 +2,6 @@
 // for client use; database security MUST be enforced with Row Level Security.
 // Never place a Supabase service-role key, email API key, or AI provider key here.
 window.KH_CONFIG = {
-  supabaseUrl: '',
-  supabaseAnonKey: ''
+  supabaseUrl: 'https://mwyandmohbtfyyvjeemo.supabase.co',
+  supabaseAnonKey: 'sb_publishable_gOBF8VHTjECiOvpZ1df92g_mdyErFLZ'
 };
