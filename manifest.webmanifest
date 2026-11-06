@@ -1,0 +1,10 @@
+{
+  "name": "Khaled Hany — Digital Identity",
+  "short_name": "Khaled Hany",
+  "description": "Personal digital identity, learning journey and projects.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#070a12",
+  "theme_color": "#070a12",
+  "icons": [{"src":"./favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
