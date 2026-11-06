@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070a12">
+  <meta name="description" content="خالد هاني — طالب ذكاء اصطناعي بالأزهر، مهتم بالبرمجة وهندسة البرمجيات وصناعة المحتوى. مساحة شخصية لرحلة التعلّم والمشاريع والأفكار.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="KHALED HANY — Digital Identity">
+  <meta property="og:description" content="Artificial Intelligence · Software Engineering · Creative Technology">
+  <meta property="og:image" content="./assets/images/social-preview.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./assets/css/site.css">
+  <title>خالد هاني | هويتي الرقمية</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/",
+        "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.119.0?bundle"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="reading-progress" aria-hidden="true"><span id="progressBar"></span></div>
+  <header class="site-header" id="top">
+    <div class="container nav-shell">
+      <a class="brand" href="#home" aria-label="Khaled Hany home">
+        <span class="brand-mark">KH</span>
+        <span class="brand-copy"><strong>KHALED HANY</strong><small>DIGITAL IDENTITY</small></span>
+      </a>
+      <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+        <a href="#about" data-ar="عنّي" data-en="About">عنّي</a>
+        <a href="#education" data-ar="الدراسة" data-en="Education">الدراسة</a>
+        <a href="#skills" data-ar="المهارات" data-en="Skills">المهارات</a>
+        <a href="#projects" data-ar="المشاريع" data-en="Projects">المشاريع</a>
+        <a href="#journey" data-ar="رحلتي" data-en="Journey">رحلتي</a>
+        <a href="#contact" data-ar="تواصل" data-en="Contact">تواصل</a>
+        <a href="./account/" data-ar="حسابي" data-en="My account">حسابي</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="quiet-button language-button" id="languageButton" type="button" aria-label="Switch language">EN</button>
+        <button class="quiet-button square-button" id="themeButton" type="button" aria-label="Toggle color theme" title="Theme">☼</button>
+        <button class="quiet-button square-button" id="motionButton" type="button" aria-label="Pause motion" aria-pressed="false" title="Motion">Ⅱ</button>
+        <button class="quiet-button square-button menu-button" id="menuButton" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mainNav">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero container" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="status-dot"></span><span data-ar="مساحة شخصية للتعلّم والبناء" data-en="A personal space to learn and build">مساحة شخصية للتعلّم والبناء</span></div>
+        <p class="hero-kicker">ARTIFICIAL INTELLIGENCE / SOFTWARE / CREATIVITY</p>
+        <h1 id="heroTitle"><span class="hero-name">Khaled</span><br><span class="hero-arabic" data-ar="هاني" data-en="Hany">هاني</span><span class="hero-period">.</span></h1>
+        <p class="hero-lead" data-ar="طالب ذكاء اصطناعي، أبني معرفتي في البرمجة والتقنية، وأحوّل فضولي إلى تجارب ومشاريع لها معنى." data-en="An Artificial Intelligence student building my knowledge in programming and technology, turning curiosity into meaningful experiments and projects.">طالب ذكاء اصطناعي، أبني معرفتي في البرمجة والتقنية، وأحوّل فضولي إلى تجارب ومشاريع لها معنى.</p>
+        <div class="role-line"><span id="roleText" data-ar="طالب ذكاء اصطناعي" data-en="Artificial Intelligence student">طالب ذكاء اصطناعي</span><span class="typing-caret" aria-hidden="true"></span></div>
+        <div class="hero-actions">
+          <a class="primary-button" href="#about"><span data-ar="اكتشف رحلتي" data-en="Explore my journey">اكتشف رحلتي</span><span aria-hidden="true">↗</span></a>
+          <a class="secondary-button" href="#projects"><span data-ar="مساحة المشاريع" data-en="Project space">مساحة المشاريع</span><span aria-hidden="true">⌘</span></a>
+        </div>
+        <div class="hero-footnote"><span class="footnote-line"></span><span data-ar="رحلة مستمرة — خطوة وراء خطوة" data-en="A work in progress — one step at a time">رحلة مستمرة — خطوة وراء خطوة</span></div>
+      </div>
+
+      <div class="hero-stage" id="sceneWrap">
+        <div class="stage-topline"><span>KH / 001</span><span class="stage-live"><i></i> <span data-ar="تجربة تفاعلية" data-en="INTERACTIVE EXPERIENCE">تجربة تفاعلية</span></span></div>
+        <div class="stage-orbit-label" aria-hidden="true">DIGITAL CORE · 3D WEBGL</div><div class="stage-loading" id="stageLoading" aria-live="polite">LOADING 3D ASSET</div>
+        <canvas id="hero3d" aria-label="Interactive real-time 3D object. Use pointer or touch to rotate the scene."></canvas>
+        <div class="stage-readout" aria-hidden="true"><span>01</span><span>ORBITAL / SYSTEM</span></div>
+        <div class="scene-hint" data-ar="حرّك المؤشر أو اسحب لاستكشاف المجسم" data-en="Move or drag to explore the 3D form">حرّك المؤشر أو اسحب لاستكشاف المجسم</div>
+        <div class="stage-card"><span data-ar="الحالة الحالية" data-en="CURRENT MODE">الحالة الحالية</span><strong data-ar="تعلّم وبناء" data-en="LEARN & BUILD">تعلّم وبناء</strong><small><i></i><span data-ar="في تطوّر مستمر" data-en="ALWAYS EVOLVING">في تطوّر مستمر</span></small></div>
+      </div>
+      <div class="hero-scroll"><span class="scroll-mouse"></span><span data-ar="مرّر لاكتشاف المزيد" data-en="SCROLL TO EXPLORE">مرّر لاكتشاف المزيد</span></div>
+    </section>
+
+    <section class="scene-selector container" aria-label="3D scene modes">
+      <div class="scene-selector-head"><span data-ar="استكشف أبعاد الاهتمام" data-en="Explore the dimensions">استكشف أبعاد الاهتمام</span><small data-ar="كل اختيار يغيّر المشهد ثلاثي الأبعاد" data-en="Each selection reshapes the 3D scene">كل اختيار يغيّر المشهد ثلاثي الأبعاد</small></div>
+      <div class="scene-options" role="group" aria-label="Select 3D scene">
+        <button type="button" class="scene-option active" data-scene="ai"><span>01</span><b data-ar="الذكاء الاصطناعي" data-en="Artificial Intelligence">الذكاء الاصطناعي</b></button>
+        <button type="button" class="scene-option" data-scene="engineering"><span>02</span><b data-ar="هندسة البرمجيات" data-en="Software Engineering">هندسة البرمجيات</b></button>
+        <button type="button" class="scene-option" data-scene="code"><span>03</span><b data-ar="البرمجة" data-en="Programming">البرمجة</b></button>
+        <button type="button" class="scene-option" data-scene="creative"><span>04</span><b data-ar="الإبداع الرقمي" data-en="Digital Creativity">الإبداع الرقمي</b></button>
+        <button type="button" class="scene-option" data-scene="projects"><span>05</span><b data-ar="المشاريع" data-en="Projects">المشاريع</b></button>
+        <button type="button" class="scene-option" data-scene="future"><span>06</span><b data-ar="الرؤية القادمة" data-en="Future Vision">الرؤية القادمة</b></button>
+      </div>
+    </section>
+
+    <div class="discipline-strip" aria-label="Areas of interest"><div class="container discipline-inner"><span>ARTIFICIAL INTELLIGENCE</span><b>✳</b><span>SOFTWARE ENGINEERING</span><b>✳</b><span>CREATIVE CONTENT</span><b>✳</b><span>DIGITAL CRAFT</span></div></div>
+
+    <section class="content-section container" id="about">
+      <div class="section-heading reveal"><div><span class="section-index">01 / ABOUT ME</span><h2 data-ar="وراء الاسم، حكاية بتتكوّن." data-en="A story still in the making.">وراء الاسم، حكاية بتتكوّن.</h2></div><p data-ar="مساحة للتعرّف عليّ، على ما أتعلمه، وما أطمح إلى بنائه في رحلتي." data-en="A place to discover who I am, what I'm learning, and what I aspire to build.">مساحة للتعرّف عليّ، على ما أتعلمه، وما أطمح إلى بنائه في رحلتي.</p></div>
+      <div class="about-layout">
+        <article class="surface-panel about-panel reveal"><span class="panel-overline">A LITTLE ABOUT ME</span><h3 data-ar="أهلًا، أنا خالد هاني 👋" data-en="Hey, I'm Khaled Hany 👋">أهلًا، أنا خالد هاني 👋</h3><p data-ar="أنا طالب في مجال الذكاء الاصطناعي بالأزهر، ومهتم بالبرمجة وهندسة البرمجيات وصناعة المحتوى. أؤمن إن أفضل طريقة للتعلّم هي إنك تفهم الأساسيات، تطبّق بإيدك، وتشارك اللي بتتعلمه. الصفحة دي مساحة مفتوحة لعرض رحلتي ومشاريعي وتطوري — وهتتحدّث كل ما أحقق خطوة جديدة." data-en="I'm an Artificial Intelligence student at Al-Azhar, interested in programming, software engineering, and content creation. I believe the best way to learn is to understand the fundamentals, build with your own hands, and share what you discover. This page is a living space for my journey, projects, and growth — updated as I take new steps.">أنا طالب في مجال الذكاء الاصطناعي بالأزهر، ومهتم بالبرمجة وهندسة البرمجيات وصناعة المحتوى. أؤمن إن أفضل طريقة للتعلّم هي إنك تفهم الأساسيات، تطبّق بإيدك، وتشارك اللي بتتعلمه. الصفحة دي مساحة مفتوحة لعرض رحلتي ومشاريعي وتطوري — وهتتحدّث كل ما أحقق خطوة جديدة.</p><div class="honesty-note"><span>✳</span><span data-ar="المحتوى هنا بيعكس رحلتي الحالية بصدق، من غير أرقام أو إنجازات غير موثّقة." data-en="This page reflects my current journey honestly, without unverified numbers or achievements.">المحتوى هنا بيعكس رحلتي الحالية بصدق، من غير أرقام أو إنجازات غير موثّقة.</span></div></article>
+        <div class="about-aside"><article class="surface-panel mini-panel reveal"><span class="mini-icon">⌁</span><small data-ar="المجال الأكاديمي" data-en="ACADEMIC FIELD">المجال الأكاديمي</small><strong data-ar="الذكاء الاصطناعي" data-en="Artificial Intelligence">الذكاء الاصطناعي</strong><span class="mini-rule"></span></article><article class="surface-panel mini-panel reveal"><span class="mini-icon">⌘</span><small data-ar="الاهتمام العملي" data-en="PRACTICAL INTEREST">الاهتمام العملي</small><strong data-ar="هندسة البرمجيات" data-en="Software Engineering">هندسة البرمجيات</strong><span class="mini-rule"></span></article><article class="surface-panel mini-panel reveal"><span class="mini-icon">✳</span><small data-ar="المساحة الإبداعية" data-en="CREATIVE SPACE">المساحة الإبداعية</small><strong data-ar="صناعة المحتوى" data-en="Content Creation">صناعة المحتوى</strong><span class="mini-rule"></span></article></div>
+      </div>
+    </section>
+
+    <section class="content-section container" id="education">
+      <div class="section-heading reveal"><div><span class="section-index">02 / EDUCATION</span><h2 data-ar="بداية المسار الأكاديمي." data-en="The academic starting point.">بداية المسار الأكاديمي.</h2></div><p data-ar="المعرفة الأكاديمية نقطة انطلاق، والتطبيق هو اللي يحوّلها لمهارة." data-en="Academic knowledge is a starting point; practice is what turns it into a skill.">المعرفة الأكاديمية نقطة انطلاق، والتطبيق هو اللي يحوّلها لمهارة.</p></div>
+      <article class="education-panel surface-panel reveal"><div class="education-symbol">أ</div><div><span class="panel-overline">ACADEMIC BACKGROUND</span><h3 data-ar="جامعة الأزهر" data-en="Al-Azhar University">جامعة الأزهر</h3><p data-ar="الذكاء الاصطناعي · طالب" data-en="Artificial Intelligence · Student">الذكاء الاصطناعي · طالب</p></div><span class="education-tag" data-ar="المسار الحالي" data-en="CURRENT PATH">المسار الحالي</span></article>
+    </section>
+
+    <section class="content-section container" id="skills">
+      <div class="section-heading reveal"><div><span class="section-index">03 / INTERESTS & SKILLS</span><h2 data-ar="المجالات اللي ببني نفسي فيها." data-en="The fields I'm growing into.">المجالات اللي ببني نفسي فيها.</h2></div><p data-ar="دي مجالات اهتمام وتعلّم، مش تقييم لمستوى احترافي. هتتحدّث مع تقدّم الخبرة والمشاريع." data-en="These are learning interests, not claims of professional mastery. They'll evolve with experience and projects.">دي مجالات اهتمام وتعلّم، مش تقييم لمستوى احترافي. هتتحدّث مع تقدّم الخبرة والمشاريع.</p></div>
+      <div class="skills-grid">
+        <article class="skill-panel surface-panel reveal"><span class="skill-number">01</span><div class="skill-glyph">{ }</div><h3>Programming</h3><p data-ar="أساسيات البرمجة وحل المشكلات." data-en="Programming fundamentals and problem solving.">أساسيات البرمجة وحل المشكلات.</p><small data-ar="مساحة تعلّم" data-en="LEARNING AREA">مساحة تعلّم</small></article>
+        <article class="skill-panel surface-panel reveal"><span class="skill-number">02</span><div class="skill-glyph">⌁</div><h3>Artificial Intelligence</h3><p data-ar="مفاهيم الذكاء الاصطناعي وتطبيقاته." data-en="AI concepts and practical applications.">مفاهيم الذكاء الاصطناعي وتطبيقاته.</p><small data-ar="مساحة تعلّم" data-en="LEARNING AREA">مساحة تعلّم</small></article>
+        <article class="skill-panel surface-panel reveal"><span class="skill-number">03</span><div class="skill-glyph">▤</div><h3>Backend Development</h3><p data-ar="بناء منطق التطبيقات وواجهات API." data-en="Application logic and API development.">بناء منطق التطبيقات وواجهات API.</p><small data-ar="مساحة تعلّم" data-en="LEARNING AREA">مساحة تعلّم</small></article>
+        <article class="skill-panel surface-panel reveal"><span class="skill-number">04</span><div class="skill-glyph">◫</div><h3>Content Creation</h3><p data-ar="الأفكار والكتابة والسرد البصري." data-en="Ideas, writing, and visual storytelling.">الأفكار والكتابة والسرد البصري.</p><small data-ar="مساحة تعلّم" data-en="LEARNING AREA">مساحة تعلّم</small></article>
+      </div>
+    </section>
+
+    <section class="content-section container" id="projects">
+      <div class="section-heading reveal"><div><span class="section-index">04 / SELECTED WORK</span><h2 data-ar="الأفكار تتحوّل إلى مشاريع." data-en="Ideas become real projects.">الأفكار تتحوّل إلى مشاريع.</h2></div><p data-ar="المكان ده مخصص للمشاريع الحقيقية وروابط الكود والتجربة. المشاريع المنشورة فقط هي اللي هتظهر هنا." data-en="A space for real projects, code, and live demos. Only published work appears here.">المكان ده مخصص للمشاريع الحقيقية وروابط الكود والتجربة. المشاريع المنشورة فقط هي اللي هتظهر هنا.</p></div>
+      <div class="project-toolbar"><div class="project-filters" role="group" aria-label="Project filters"><button class="filter-chip active" type="button" data-filter="all" data-ar="الكل" data-en="All">الكل</button><button class="filter-chip" type="button" data-filter="ai">AI</button><button class="filter-chip" type="button" data-filter="web">Web</button><button class="filter-chip" type="button" data-filter="tools" data-ar="أدوات" data-en="Tools">أدوات</button></div><span class="project-count" id="projectCount" data-ar="0 مشروع منشور" data-en="0 published projects">0 مشروع منشور</span></div>
+      <div id="projectGrid" class="projects-grid" aria-live="polite"></div>
+      <div class="empty-projects surface-panel" id="emptyProjects"><span class="empty-mark">✳</span><h3 data-ar="المساحة جاهزة لأول مشروع حقيقي." data-en="Ready for the first real project.">المساحة جاهزة لأول مشروع حقيقي.</h3><p data-ar="أضف مشاريعك من لوحة المالك، مع وصف واضح ورابط الكود أو المعاينة. مش هنعرض بطاقات افتراضية على إنها أعمال منفذة." data-en="Add projects from the owner dashboard with a clear description and code or demo link. No sample cards will be presented as completed work.">أضف مشاريعك من لوحة المالك، مع وصف واضح ورابط الكود أو المعاينة. مش هنعرض بطاقات افتراضية على إنها أعمال منفذة.</p></div>
+    </section>
+
+    <section class="content-section container" id="content">
+      <div class="section-heading reveal"><div><span class="section-index">05 / CONTENT & MEDIA</span><h2 data-ar="المعرفة تستحق إنها تتشارك." data-en="Knowledge deserves to be shared.">المعرفة تستحق إنها تتشارك.</h2></div><p data-ar="مساحة لعرض الفيديوهات والمقالات والتجارب الإبداعية وروابط قنواتك." data-en="A place for videos, articles, creative experiments, and channel links.">مساحة لعرض الفيديوهات والمقالات والتجارب الإبداعية وروابط قنواتك.</p></div>
+      <div class="content-cards"><article class="content-feature surface-panel reveal"><span class="feature-icon">▶</span><div><span class="panel-overline">VIDEO / YOUTUBE</span><h3>YouTube & Video</h3><p data-ar="أضف اسم قناتك ورابطها، ثم اعرض أفضل فيديوهاتك هنا." data-en="Add your channel name and link, then feature your best videos here.">أضف اسم قناتك ورابطها، ثم اعرض أفضل فيديوهاتك هنا.</p><span class="feature-state" data-ar="بانتظار إضافة الرابط" data-en="CHANNEL LINK NOT ADDED YET">بانتظار إضافة الرابط</span></div></article><article class="content-feature surface-panel reveal"><span class="feature-icon">✎</span><div><span class="panel-overline">WRITING / NOTES</span><h3>Writing & Notes</h3><p data-ar="شارك ملاحظاتك التعليمية، المقالات، والموارد التي ساعدتك." data-en="Share study notes, articles, and resources that helped you learn.">شارك ملاحظاتك التعليمية، المقالات، والموارد التي ساعدتك.</p><span class="feature-state" data-ar="بانتظار إضافة المحتوى" data-en="CONTENT NOT ADDED YET">بانتظار إضافة المحتوى</span></div></article></div>
+    </section>
+
+    <section class="content-section container" id="journey">
+      <div class="section-heading reveal"><div><span class="section-index">06 / THE JOURNEY</span><h2 data-ar="خطوة وراء خطوة." data-en="One step at a time.">خطوة وراء خطوة.</h2></div><p data-ar="رحلة التعلّم مش خط مستقيم. أضف محطاتك الحقيقية كل ما تتقدم." data-en="Learning isn't a straight line. Add real milestones as you move forward.">رحلة التعلّم مش خط مستقيم. أضف محطاتك الحقيقية كل ما تتقدم.</p></div>
+      <div class="timeline" id="journeyList"><article class="timeline-item reveal"><span class="timeline-point"></span><small>01 / START</small><h3 data-ar="البداية الأكاديمية" data-en="Academic beginning">البداية الأكاديمية</h3><p data-ar="دراسة الذكاء الاصطناعي وبناء فهم أكاديمي للمجال." data-en="Studying Artificial Intelligence and building an academic foundation.">دراسة الذكاء الاصطناعي وبناء فهم أكاديمي للمجال.</p></article><article class="timeline-item reveal"><span class="timeline-point"></span><small>02 / FUNDAMENTALS</small><h3 data-ar="تأسيس مهارات البرمجة" data-en="Building programming fundamentals">تأسيس مهارات البرمجة</h3><p data-ar="التدرّب على أساسيات البرمجة وحل المشكلات بمشاريع صغيرة." data-en="Practising programming fundamentals and problem solving through small projects.">التدرّب على أساسيات البرمجة وحل المشكلات بمشاريع صغيرة.</p></article><article class="timeline-item reveal"><span class="timeline-point"></span><small>03 / BUILD</small><h3 data-ar="بناء معرض الأعمال" data-en="Building a portfolio">بناء معرض الأعمال</h3><p data-ar="أضف هنا تواريخ وروابط أول مشاريعك الفعلية عند اكتمالها." data-en="Add dates and links to your first completed projects as they become real.">أضف هنا تواريخ وروابط أول مشاريعك الفعلية عند اكتمالها.</p></article></div>
+    </section>
+
+    <section class="content-section container" id="now">
+      <div class="section-heading reveal"><div><span class="section-index">07 / CURRENT FOCUS</span><h2 data-ar="ما الذي أعمل عليه الآن؟" data-en="What am I working on now?">ما الذي أعمل عليه الآن؟</h2></div><p data-ar="أهداف قريبة قابلة للتحديث، بدل وعود كبيرة من غير خطوات عملية." data-en="Practical, updateable goals instead of big promises without action.">أهداف قريبة قابلة للتحديث، بدل وعود كبيرة من غير خطوات عملية.</p></div>
+      <div class="focus-grid"><article class="focus-card surface-panel reveal"><span>01</span><h3 data-ar="تقوية الأساسيات" data-en="Strengthen the fundamentals">تقوية الأساسيات</h3><p data-ar="برمجة، تفكير منطقي، وحل مسائل بشكل منتظم." data-en="Programming, logical thinking, and consistent problem solving.">برمجة، تفكير منطقي، وحل مسائل بشكل منتظم.</p></article><article class="focus-card surface-panel reveal"><span>02</span><h3 data-ar="التعلّم بالمشاريع" data-en="Learn by building">التعلّم بالمشاريع</h3><p data-ar="تحويل المفاهيم النظرية إلى تطبيقات صغيرة قابلة للتجربة." data-en="Turning theory into small, testable applications.">تحويل المفاهيم النظرية إلى تطبيقات صغيرة قابلة للتجربة.</p></article><article class="focus-card surface-panel reveal"><span>03</span><h3 data-ar="تطوير التواصل التقني" data-en="Improve technical communication">تطوير التواصل التقني</h3><p data-ar="تحسين الإنجليزية التقنية ومشاركة ما أتعلمه بوضوح." data-en="Improving technical English and sharing what I learn clearly.">تحسين الإنجليزية التقنية ومشاركة ما أتعلمه بوضوح.</p></article></div>
+    </section>
+
+    <section class="contact-section container" id="contact">
+      <div class="section-heading reveal"><div><span class="section-index">08 / GET IN TOUCH</span><h2 data-ar="خلّينا نبدأ حوار." data-en="Let's start a conversation.">خلّينا نبدأ حوار.</h2></div><p data-ar="للتعاون أو تبادل الأفكار أو الحديث عن التقنية والتعلّم." data-en="For collaboration, exchanging ideas, or conversations about technology and learning.">للتعاون أو تبادل الأفكار أو الحديث عن التقنية والتعلّم.</p></div>
+      <div class="contact-layout"><div class="contact-intro surface-panel reveal"><span class="panel-overline">OPEN TO MEANINGFUL CONVERSATIONS</span><div class="contact-symbol">↗</div><h3 data-ar="يسعدني التواصل." data-en="I'd be glad to connect.">يسعدني التواصل.</h3><p data-ar="بيانات التواصل الحقيقية هتتضاف هنا قبل نشر الموقع. لا توجد روابط وهمية في النسخة الحالية." data-en="Verified contact details will be added here before launch. There are no fabricated links in this version.">بيانات التواصل الحقيقية هتتضاف هنا قبل نشر الموقع. لا توجد روابط وهمية في النسخة الحالية.</p><span class="contact-state" id="contactStatus"><i></i><span data-ar="نموذج التواصل يحتاج ربط قاعدة البيانات" data-en="Contact form needs a backend connection">نموذج التواصل يحتاج ربط قاعدة البيانات</span></span></div>
+        <form class="contact-form surface-panel reveal" id="contactForm" novalidate><label class="honeypot" aria-hidden="true" tabindex="-1">Website<input name="website" autocomplete="off" tabindex="-1"></label><h3 data-ar="رسالة سريعة" data-en="A quick message">رسالة سريعة</h3><div class="form-row"><label><span data-ar="اسمك" data-en="Your name">اسمك</span><input name="name" autocomplete="name" maxlength="100" required placeholder="Khaled"></label><label><span data-ar="بريدك الإلكتروني" data-en="Your email">بريدك الإلكتروني</span><input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="name@example.com"></label></div><label class="message-label"><span data-ar="رسالتك" data-en="Your message">رسالتك</span><textarea name="message" rows="5" maxlength="5000" required placeholder="..."></textarea></label><div class="form-actions"><button class="primary-button" id="sendButton" type="submit" disabled><span data-ar="إرسال الرسالة" data-en="Send message">إرسال الرسالة</span><span>↗</span></button><small id="formHint" data-ar="لن يتم تفعيل الإرسال قبل إعداد Supabase. لا يتم إرسال أو تخزين أي بيانات حاليًا." data-en="Sending stays disabled until Supabase is configured. No data is sent or stored right now.">لن يتم تفعيل الإرسال قبل إعداد Supabase. لا يتم إرسال أو تخزين أي بيانات حاليًا.</small></div><div class="form-feedback" id="formFeedback" role="status" aria-live="polite"></div></form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-inner"><div><a class="footer-brand" href="#top">KHALED HANY</a><span>© <span id="year"></span> · <span data-ar="كل الحقوق محفوظة" data-en="All rights reserved">كل الحقوق محفوظة</span></span></div><span data-ar="صُنع بشغف للتعلّم والبناء ✦" data-en="Made with curiosity and intent ✦">صُنع بشغف للتعلّم والبناء ✦</span><div class="footer-actions"><a href="#top" data-ar="العودة للأعلى ↑" data-en="Back to top ↑">العودة للأعلى ↑</a><a href="./account/" data-ar="حسابي" data-en="My account">حسابي</a><a href="./owner/" data-ar="لوحة المالك" data-en="Owner center">لوحة المالك</a></div></div></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./config.js"></script>
+  <script type="module" src="./assets/js/app.js"></script>
+</body>
+</html>
