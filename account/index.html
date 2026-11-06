@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090d16">
+  <meta name="robots" content="noindex,nofollow">
+  <title>حسابك | KHALED HANY</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./account.css">
+  <script type="importmap">
+    {"imports":{"@supabase/supabase-js":"https://esm.sh/@supabase/supabase-js@2.119.0?bundle"}}
+  </script>
+</head>
+<body>
+  <main class="account-shell">
+    <a class="brand" href="../"><span>KH</span><b>KHALED HANY<small>PERSONAL ACCOUNT</small></b></a>
+    <section id="authPanel" class="panel">
+      <p class="eyebrow">ACCOUNT / SECURE ACCESS</p>
+      <h1 id="authTitle">حسابك الشخصي</h1>
+      <p class="intro">أنشئ حسابًا لإدارة بياناتك الشخصية والوصول إلى المزايا التي يتيحها الموقع. لا يمنح التسجيل صلاحيات إدارية.</p>
+      <div class="tabs"><button id="loginTab" class="active" type="button">تسجيل الدخول</button><button id="signupTab" type="button">إنشاء حساب</button></div>
+      <form id="authForm" autocomplete="on">
+        <label id="nameField" hidden>الاسم المعروض<input name="display_name" type="text" maxlength="80" autocomplete="name"></label>
+        <label>البريد الإلكتروني<input name="email" type="email" required maxlength="254" autocomplete="email"></label>
+        <label>كلمة المرور<input name="password" type="password" required minlength="10" maxlength="128" autocomplete="current-password"></label>
+        <button class="primary" id="authSubmit" type="submit">دخول <span>↗</span></button>
+      </form>
+      <p id="authMessage" class="message" role="status" aria-live="polite">تحتاج إلى إعداد Supabase في config.js لتفعيل الحسابات.</p>
+    </section>
+
+    <section id="profilePanel" class="panel" hidden>
+      <div class="profile-head"><div><p class="eyebrow">YOUR PROFILE</p><h1>بيانات حسابك</h1><p id="userEmail" class="muted"></p></div><span id="roleBadge" class="role">REGISTERED USER</span></div>
+      <form id="profileForm">
+        <label>الاسم المعروض<input name="display_name" type="text" maxlength="80" required autocomplete="name"></label>
+        <label>نبذة قصيرة<textarea name="bio" maxlength="500" rows="4" placeholder="اكتب نبذة اختيارية عنك…"></textarea></label>
+        <label>رابط الصورة الشخصية<input name="avatar_url" type="url" maxlength="500" placeholder="https://…"></label>
+        <label>اللغة المفضلة<select name="preferred_language"><option value="ar">العربية</option><option value="en">English</option></select></label>
+        <div class="profile-actions"><button class="primary" type="submit">حفظ بياناتي <span>↗</span></button><button id="logoutButton" class="secondary" type="button">تسجيل الخروج</button></div>
+      </form>
+      <p id="profileMessage" class="message" role="status" aria-live="polite"></p>
+      <p class="security-note">تستطيع تعديل بياناتك أنت فقط. لا يمكن تغيير دور الحساب من هذه الصفحة. أي صلاحيات إضافية يمنحها مالك الموقع من لوحة التحكم.</p>
+    </section>
+    <footer><a href="../">العودة إلى الموقع</a><span>المصادقة والبيانات محفوظة عبر Supabase عند تفعيل الخدمة.</span></footer>
+  </main>
+  <script src="../config.js"></script>
+  <script type="module" src="./account.js"></script>
+</body>
+</html>
