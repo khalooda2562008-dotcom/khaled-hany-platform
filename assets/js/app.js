@@ -7,7 +7,7 @@ const state = {
   lang: localStorage.getItem('kh-lang') === 'en' ? 'en' : 'ar',
   light: localStorage.getItem('kh-theme') === 'light',
   motion: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  scene: 'ai',
+  scene: 'nova',
   modelUrl: '',
   projects: [],
   sectionRows: [], skills: [], education: [], journey: [], goals: [], contentItems: [], publicSettings: []
@@ -293,7 +293,7 @@ function applyPublicSettings(rows) {
       if (typeof description === 'string' && description.trim()) document.querySelector('meta[name="description"]')?.setAttribute('content',description.slice(0,300));
     }
     if (entry.setting_key === 'three_scene') {
-      if (['ai','engineering','code','creative','projects','future'].includes(v.default_scene)) state.scene = v.default_scene;
+      if (['nova','ai','engineering','code','creative','projects','future'].includes(v.default_scene)) state.scene = v.default_scene;
       const candidate = safeExternalUrl(v.model_url);
       state.modelUrl = candidate && new URL(candidate).protocol === 'https:' ? candidate : '';
     }

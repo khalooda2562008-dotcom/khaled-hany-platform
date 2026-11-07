@@ -1,4 +1,5 @@
 const MODES = {
+  nova: { color: 0xf7c66b, secondary: 0x5eead4, scale: 1.04, speed: 0.55, shape: 'sphere', galaxy: true },
   ai: { color: 0x67e8f9, secondary: 0xa78bfa, scale: 1, speed: 1, shape: 'icosa' },
   engineering: { color: 0x7dd3fc, secondary: 0x60a5fa, scale: 0.92, speed: 0.72, shape: 'octa' },
   code: { color: 0x79e3c2, secondary: 0x67e8f9, scale: 0.86, speed: 1.25, shape: 'box' },
@@ -82,7 +83,7 @@ export async function createHeroScene(canvas, onFallback, options = {}) {
       if (disposed) return;
       let sourceMesh = null;
       gltf.scene.traverse(object => { if (!sourceMesh && object.isMesh) sourceMesh = object; });
-      if (sourceMesh?.geometry) {
+      if (mode !== 'nova' && sourceMesh?.geometry) {
         core.geometry.dispose();
         core.geometry = sourceMesh.geometry.clone();
         const sourceMaterial = Array.isArray(sourceMesh.material) ? sourceMesh.material[0] : sourceMesh.material;
@@ -192,6 +193,41 @@ export async function createHeroScene(canvas, onFallback, options = {}) {
   }));
   world.add(particles);
 
+  // Spiral galaxy used by the "nova" scene: a warm disc that wraps the globe.
+  const galaxyCount = lowPower ? 900 : 2200;
+  const galaxyPositions = new Float32Array(galaxyCount * 3);
+  const galaxyColors = new Float32Array(galaxyCount * 3);
+  const gA = new THREE.Color(0xf7c66b);
+  const gB = new THREE.Color(0x5eead4);
+  for (let i = 0; i < galaxyCount; i++) {
+    const t = i / galaxyCount;
+    const arm = i % 3;
+    const radius = 0.62 + t * 3.1;
+    const angle = arm * (Math.PI * 2 / 3) + t * 5.6 + (Math.random() - 0.5) * 0.38;
+    galaxyPositions[i * 3] = Math.cos(angle) * radius;
+    galaxyPositions[i * 3 + 1] = (Math.random() - 0.5) * (0.1 + t * 0.55);
+    galaxyPositions[i * 3 + 2] = Math.sin(angle) * radius;
+    const color = gA.clone().lerp(gB, t * 0.85);
+    galaxyColors[i * 3] = color.r;
+    galaxyColors[i * 3 + 1] = color.g;
+    galaxyColors[i * 3 + 2] = color.b;
+  }
+  const galaxyGeometry = new THREE.BufferGeometry();
+  galaxyGeometry.setAttribute('position', new THREE.BufferAttribute(galaxyPositions, 3));
+  galaxyGeometry.setAttribute('color', new THREE.BufferAttribute(galaxyColors, 3));
+  const galaxy = new THREE.Points(galaxyGeometry, new THREE.PointsMaterial({
+    size: lowPower ? 0.015 : 0.02,
+    transparent: true,
+    opacity: 0.78,
+    vertexColors: true,
+    sizeAttenuation: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  }));
+  galaxy.rotation.x = 0.32;
+  galaxy.visible = false;
+  world.add(galaxy);
+
   const starGeometry = new THREE.BufferGeometry();
   const starPositions = new Float32Array(120 * 3);
   for (let i = 0; i < 120; i++) {
@@ -239,6 +275,7 @@ export async function createHeroScene(canvas, onFallback, options = {}) {
     coreMaterial.color.copy(color);
     coreMaterial.emissive.copy(color).multiplyScalar(0.16);
     const shapeGeometry = {
+      sphere: () => new THREE.SphereGeometry(1.0, lowPower ? 40 : 64, lowPower ? 28 : 44),
       icosa: () => new THREE.IcosahedronGeometry(1.02, lowPower ? 2 : 3),
       octa: () => new THREE.OctahedronGeometry(1.12, 2),
       box: () => new THREE.BoxGeometry(1.48, 1.48, 1.48, 4, 4, 4),
@@ -246,8 +283,13 @@ export async function createHeroScene(canvas, onFallback, options = {}) {
       dodeca: () => new THREE.DodecahedronGeometry(1.06, 1)
     };
     const nextGeometry = (shapeGeometry[style.shape] || shapeGeometry.icosa)();
-    core.geometry.dispose();
+    if (core.geometry) core.geometry.dispose();
     core.geometry = nextGeometry;
+    const globe = style.shape === 'sphere';
+    if (shell.geometry) shell.geometry.dispose();
+    shell.geometry = globe ? new THREE.SphereGeometry(1.26, lowPower ? 18 : 26, lowPower ? 12 : 18) : new THREE.IcosahedronGeometry(1.22, 2);
+    inner.visible = !globe;
+    if (galaxy) galaxy.visible = Boolean(style.galaxy);
     rimLight.color.copy(color);
     violetLight.color.copy(secondary);
     ringMaterials[0].color.copy(color);
@@ -294,6 +336,7 @@ export async function createHeroScene(canvas, onFallback, options = {}) {
     ringGroup.rotation.y = rotation * 0.24 + pointerX * 0.1;
     ringGroup.rotation.x = pointerY * 0.11;
     particles.rotation.y = -rotation * 0.13;
+    galaxy.rotation.y = rotation * 0.1;
     stars.rotation.y = rotation * 0.025;
     satelliteGroup.rotation.y = -rotation * 0.26;
     satellites.forEach((mesh, index) => {
