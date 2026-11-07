@@ -85,6 +85,11 @@ export async function createHeroScene(canvas, onFallback, options = {}) {
     const candidates = requestedModel
       ? [requestedModel]
       : [new URL('../models/me.glb', import.meta.url).href, new URL('../models/khaled-digital-core.glb', import.meta.url).href];
+    if (!requestedModel && location.hostname.endsWith('github.io')) {
+      const [user] = location.hostname.split('.');
+      const repo = location.pathname.split('/').filter(Boolean)[0];
+      if (user && repo) candidates.splice(1, 0, `https://raw.githubusercontent.com/${user}/${repo}/main/assets/models/me.glb`);
+    }
     const disposeTree = root => root.traverse(object => {
       if (object.geometry) object.geometry.dispose();
       if (object.material) {
