@@ -4,7 +4,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const state = { client: null, user: null, role: null, sections: [], projects: [], media: [], messages: [], view: 'overview', editing: null, collection: 'skills', collectionRows: [], assetResults: [] };
 const toast = (message, error = false) => { const n = $('#toast'); n.textContent = message; n.style.background = error ? '#ffccd2' : '#d8f5f2'; n.classList.add('show'); clearTimeout(toast.timer); toast.timer = setTimeout(() => n.classList.remove('show'), 3500); };
-const setBusy = (button, busy, label) => { if (!button) return; button.disabled = busy; if (label) button.dataset.oldLabel ??= button.textContent; button.textContent = busy ? 'جارٍ التنفيذ…' : (button.dataset.oldLabel || label || button.textContent); if (!busy) delete button.dataset.oldLabel; };
+const setBusy = (button, busy, label) => { if (!button) return; if (busy) button.dataset.oldLabel ??= button.textContent; button.disabled = busy; button.textContent = busy ? 'جارٍ التنفيذ…' : (label || button.dataset.oldLabel || button.textContent); if (!busy) delete button.dataset.oldLabel; };
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const dateLabel = value => value ? new Intl.DateTimeFormat('ar-EG', {dateStyle:'medium', timeStyle:'short'}).format(new Date(value)) : '—';
 const requiredRole = ['owner','administrator','editor'];
