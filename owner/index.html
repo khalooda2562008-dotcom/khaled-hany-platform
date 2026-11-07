@@ -29,6 +29,7 @@
       <nav class="side-nav" id="sideNav">
         <button class="nav-item active" data-view="overview"><i>◫</i><span>نظرة عامة</span></button>
         <button class="nav-item" data-view="sections"><i>▤</i><span>محتوى الموقع</span></button>
+        <button class="nav-item" data-view="brand"><i>✦</i><span>الهوية والمظهر</span></button>
         <button class="nav-item" data-view="projects"><i>⌘</i><span>المشاريع</span></button>
         <button class="nav-item" data-view="media"><i>▧</i><span>مكتبة الوسائط</span></button>
         <button class="nav-item" data-view="messages"><i>✉</i><span>رسائل التواصل</span><em id="unreadCount">0</em></button>
@@ -51,6 +52,62 @@
         <section class="view" id="view-sections"><div class="view-intro"><div><div class="eyebrow">CONTENT MANAGEMENT / CMS</div><h2>محتوى الموقع</h2><p>حرّر النصوص العربية والإنجليزية، ورتّب الأقسام أو أخفِ قسمًا دون حذف محتواه.</p></div><button class="primary-button" id="newSection">إضافة قسم <span>＋</span></button></div><div class="panel table-panel"><div class="table-toolbar"><input id="sectionSearch" placeholder="ابحث عن قسم…"><span id="sectionCount">—</span></div><div class="table-wrap"><table><thead><tr><th>القسم</th><th>العنوان العربي</th><th>العنوان الإنجليزي</th><th>الترتيب</th><th>الحالة</th><th></th></tr></thead><tbody id="sectionsTable"><tr><td colspan="6">بانتظار اتصال قاعدة البيانات.</td></tr></tbody></table></div></div>
           <div class="panel structured-panel"><div class="panel-heading"><div><small>STRUCTURED CONTENT</small><h3>المحتوى التفصيلي</h3></div><button class="primary-button" id="addStructured">إضافة عنصر <span>＋</span></button></div><div class="collection-tabs" id="collectionTabs"><button class="small-action active" data-collection="skills">المهارات والاهتمامات</button><button class="small-action" data-collection="education_entries">الدراسة</button><button class="small-action" data-collection="journey_milestones">محطات الرحلة</button><button class="small-action" data-collection="personal_goals">الأهداف</button><button class="small-action" data-collection="content_items">المحتوى والإعلام</button></div><div id="structuredList" class="compact-list"><div class="empty-state">اختر نوع المحتوى لتحميل سجلاته.</div></div></div>
           <div class="panel ai-panel"><div class="panel-heading"><div><small>OPTIONAL AI CONTENT ASSISTANT</small><h3>مساعد تحرير المحتوى</h3></div><span class="tag">يتطلب AI_API_KEY</span></div><form id="aiForm"><label>المهمة<input name="task" required maxlength="80" placeholder="حسّن وضوح النص مع الحفاظ على الحقائق"></label><label>اللغة<select name="language"><option value="ar">العربية</option><option value="en">English</option></select></label><label>النص المصدر<textarea name="content" required maxlength="12000" rows="4" placeholder="الصق نصًا تريد تحسينه…"></textarea></label><button class="primary-button" type="submit">إنشاء اقتراح <span>✳</span></button></form><pre id="aiResult" class="ai-result" hidden></pre></div></section>
+
+        <section class="view" id="view-brand">
+          <div class="view-intro"><div><div class="eyebrow">BRAND / APPEARANCE / 3D</div><h2>الهوية والمظهر</h2><p>حرّر الاسم والنصوص والروابط والألوان والمشهد ثلاثي الأبعاد بضغطة واحدة — تُطبَّق على الموقع العام فور الحفظ.</p></div></div>
+
+          <form class="panel brand-form" id="brandForm">
+            <div class="panel-heading full"><div><small>SITE IDENTITY</small><h3>هوية الموقع</h3></div></div>
+            <label>الاسم الكامل بالعربية<input name="name_ar" maxlength="120" placeholder="خالد هاني"></label>
+            <label>الاسم الكامل بالإنجليزية<input name="name_en" maxlength="120" placeholder="Khaled Hany" dir="ltr"></label>
+            <label>الاسم الأول (إنجليزي)<input name="first_name_en" maxlength="60" placeholder="Khaled" dir="ltr"></label>
+            <label>اسم العائلة (عربي)<input name="last_name_ar" maxlength="60" placeholder="هاني"></label>
+            <label class="full">الوصف التعريفي (عربي)<textarea name="hero_ar" maxlength="400" rows="3" placeholder="طالب ذكاء اصطناعي…"></textarea></label>
+            <label class="full">الوصف التعريفي (إنجليزي)<textarea name="hero_en" maxlength="600" rows="3" dir="ltr" placeholder="An Artificial Intelligence student…"></textarea></label>
+            <label class="full">رابط صورة خلفية الواجهة (اختياري)<input name="hero_image_url" type="url" dir="ltr" placeholder="https://…"></label>
+            <div class="full form-actions"><button class="primary-button" type="submit">حفظ هوية الموقع <span>↗</span></button></div>
+          </form>
+
+          <div class="panel">
+            <div class="panel-heading"><div><small>SOCIAL LINKS</small><h3>روابط التواصل</h3></div><button class="small-action" type="button" id="addSocialLink">إضافة رابط ＋</button></div>
+            <p class="muted">تظهر هذه الروابط في قسم التواصل بالموقع العام. استخدم روابط تبدأ بـ https:// فقط.</p>
+            <div id="socialLinksList"></div>
+            <div class="form-actions"><button class="primary-button" id="saveSocialLinks" type="button">حفظ الروابط <span>↗</span></button></div>
+          </div>
+
+          <form class="panel brand-form" id="seoForm">
+            <div class="panel-heading full"><div><small>SEARCH ENGINE</small><h3>وصف محركات البحث</h3></div></div>
+            <label class="full">الوصف بالعربية<textarea name="description_ar" maxlength="300" rows="2" placeholder="وصف مختصر يظهر في نتائج البحث…"></textarea></label>
+            <label class="full">الوصف بالإنجليزية<textarea name="description_en" maxlength="300" rows="2" dir="ltr" placeholder="Short description shown in search results…"></textarea></label>
+            <div class="full form-actions"><button class="primary-button" type="submit">حفظ الوصف <span>↗</span></button></div>
+          </form>
+
+          <form class="panel brand-form" id="appearanceForm">
+            <div class="panel-heading full"><div><small>COLOR SYSTEM</small><h3>ألوان الموقع</h3></div></div>
+            <label>اللون الأساسي (Cyan)<input name="cyan" type="color" value="#67e8f9"></label>
+            <label>اللون الثانوي (Violet)<input name="violet" type="color" value="#a78bfa"></label>
+            <label>لون الخلفية<input name="background" type="color" value="#070a12"></label>
+            <div class="full form-actions"><button class="primary-button" type="submit">حفظ الألوان <span>↗</span></button></div>
+          </form>
+
+          <form class="panel brand-form" id="sceneForm">
+            <div class="panel-heading full"><div><small>3D SCENE</small><h3>المشهد ثلاثي الأبعاد الافتراضي</h3></div></div>
+            <label>المشهد الافتراضي
+              <select name="default_scene">
+                <option value="nova">المجرة الرقمية (Digital Galaxy)</option>
+                <option value="ai">الذكاء الاصطناعي</option>
+                <option value="engineering">هندسة البرمجيات</option>
+                <option value="code">البرمجة</option>
+                <option value="creative">الإبداع الرقمي</option>
+                <option value="projects">المشاريع</option>
+                <option value="future">الرؤية القادمة</option>
+              </select>
+            </label>
+            <label>كثافة الجزيئات (0.4 – 1.6)<input name="particle_intensity" type="number" min="0.4" max="1.6" step="0.05" value="1"></label>
+            <label class="full">رابط موديل مخصص GLB (اختياري)<input name="model_url" type="url" dir="ltr" placeholder="https://…/model.glb"></label>
+            <div class="full form-actions"><button class="primary-button" type="submit">حفظ إعدادات المشهد <span>↗</span></button></div>
+          </form>
+        </section>
 
         <section class="view" id="view-projects"><div class="view-intro"><div><div class="eyebrow">PORTFOLIO CMS</div><h2>إدارة المشاريع</h2><p>لا تعرض أي مشروع للجمهور إلا بعد حفظه ونشره.</p></div><button class="primary-button" id="newProject">مشروع جديد <span>＋</span></button></div><div class="panel table-panel"><div class="table-toolbar"><input id="projectSearch" placeholder="ابحث في المشاريع…"><span id="projectCount">—</span></div><div id="projectList" class="project-admin-list"><div class="empty-state">اربط قاعدة البيانات لبدء إدارة المشاريع.</div></div></div></section>
 

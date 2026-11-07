@@ -22,6 +22,7 @@ function setView(view) {
   $('#viewTitle').textContent = active?.textContent || 'مركز التحكم';
   $('#sidebar').classList.remove('open');
   if (view === 'sections') { loadSections(); loadCollection(state.collection); }
+  if (view === 'brand') loadBrandSettings();
   if (view === 'projects') loadProjects();
   if (view === 'media') loadMedia();
   if (view === 'messages') loadMessages();
@@ -64,6 +65,7 @@ async function authorize(user) {
   const roleManager = state.role === 'owner';
   $('[data-view="users"]').hidden = !roleManager;
   $('[data-view="settings"]').hidden = !roleManager;
+  $('[data-view="brand"]').hidden = !roleManager;
   $('[data-view="sections"]').hidden = state.role === 'editor';
   $$('[data-open-view="sections"]').forEach(el => el.hidden = state.role === 'editor');
   $('[data-view="messages"]').hidden = state.role === 'editor';
@@ -274,6 +276,37 @@ async function loadSettings(){if(!state.client||state.role!=='owner')return;$('#
 function renderSettings(){$('#settingsList').innerHTML=state.siteSettings.length?state.siteSettings.map(x=>`<div class="compact-row"><div><strong>${escapeHTML(x.setting_key)}</strong><small>${x.is_public?'Public website setting':'Private setting'} · ${dateLabel(x.updated_at)}</small></div><span class="tag push">${x.is_public?'PUBLIC':'PRIVATE'}</span><div class="table-actions"><button class="small-action" data-edit-setting="${escapeHTML(x.setting_key)}">تعديل JSON</button><button class="small-action danger" data-delete-setting="${escapeHTML(x.setting_key)}">حذف</button></div></div>`).join(''):'<div class="empty-state">لا توجد إعدادات مخصصة. أضف إعدادًا واضح الاسم والبنية.</div>';}
 function editSetting(key){const record=state.siteSettings.find(x=>x.setting_key===key)||{setting_key:'site_brand',value:{name_ar:'خالد هاني',name_en:'Khaled Hany'},is_public:true};const fields=[{name:'setting_key',label:'مفتاح الإعداد',required:true},{name:'value_json',label:'القيمة بصيغة JSON',type:'textarea',full:true,required:true},{name:'is_public',label:'السماح للواجهة العامة بقراءة هذا الإعداد',type:'checkbox'}];const prepared={...record,value_json:JSON.stringify(record.value,null,2)};openEditor(key?'تعديل إعداد الموقع':'إضافة إعداد جديد','SITE SETTINGS / JSON',fields,prepared,async form=>{let value;try{value=JSON.parse(form.value_json);}catch{throw new Error('صيغة JSON غير صحيحة.');}if(!/^[a-z][a-z0-9_-]{1,48}$/.test(form.setting_key))throw new Error('مفتاح الإعداد يجب أن يكون إنجليزيًا وبصيغة slug.');const payload={setting_key:form.setting_key,value,is_public:Boolean(form.is_public),updated_by:state.user.id};const {error}=key?await state.client.from('site_settings').update({value,is_public:payload.is_public,updated_by:state.user.id}).eq('setting_key',key):await state.client.from('site_settings').insert(payload);if(error)throw error;await loadSettings();});}
 $('#newSetting').onclick=()=>editSetting(null);$('#settingsList').addEventListener('click',async e=>{const edit=e.target.closest('[data-edit-setting]'),del=e.target.closest('[data-delete-setting]');if(edit)editSetting(edit.dataset.editSetting);if(del){if(!confirm(`حذف إعداد ${del.dataset.deleteSetting}؟`))return;const {error}=await state.client.from('site_settings').delete().eq('setting_key',del.dataset.deleteSetting);if(error)toast(error.message,true);else{toast('تم حذف الإعداد.');loadSettings();}}});
+
+const settingKeys = ['site_brand','social_links','seo','appearance','three_scene'];
+const sceneKeyList = ['nova','ai','engineering','code','creative','projects','future'];
+async function loadBrandSettings() {
+ if(!state.client||state.role!=='owner')return;
+ const {data,error}=await state.client.from('site_settings').select('setting_key,value').in('setting_key',settingKeys);
+ if(error){toast(error.message,true);return;}
+ const map=Object.fromEntries((data||[]).map(x=>[x.setting_key,x.value||{}]));
+ const brand=map.site_brand||{},seo=map.seo||{},appearance=map.appearance||{},scene=map.three_scene||{};
+ const brandForm=$('#brandForm');
+ ['name_ar','name_en','first_name_en','last_name_ar','hero_ar','hero_en','hero_image_url'].forEach(k=>{const el=brandForm.elements.namedItem(k);if(el)el.value=brand[k]??'';});
+ ['description_ar','description_en'].forEach(k=>{const el=$('#seoForm').elements.namedItem(k);if(el)el.value=seo[k]??'';});
+ ['cyan','violet','background'].forEach(k=>{const el=$('#appearanceForm').elements.namedItem(k);if(el&&/^#[0-9a-fA-F]{6}$/.test(appearance[k]||''))el.value=appearance[k];});
+ const sceneForm=$('#sceneForm');
+ sceneForm.elements.namedItem('default_scene').value=sceneKeyList.includes(scene.default_scene)?scene.default_scene:'nova';
+ sceneForm.elements.namedItem('particle_intensity').value=Number(scene.particle_intensity)||1;
+ sceneForm.elements.namedItem('model_url').value=scene.model_url||'';
+ renderSocialLinks(Array.isArray(map.social_links?.links)?map.social_links.links:[]);
+}
+function socialRow(link={}){const row=document.createElement('div');row.className='link-row';row.innerHTML=`<input data-social-label maxlength="40" placeholder="الاسم (مثال: GitHub)" value="${escapeHTML(link.label||'')}"><input data-social-url type="url" dir="ltr" maxlength="500" placeholder="https://…" value="${escapeHTML(link.url||'')}"><button class="small-action danger" type="button" data-remove-social>حذف</button>`;return row;}
+function renderSocialLinks(links){const list=$('#socialLinksList');list.innerHTML='';if(!links.length){list.append(socialRow());return;}links.slice(0,8).forEach(l=>list.append(socialRow(l)));}
+$('#addSocialLink').onclick=()=>{const list=$('#socialLinksList');if(list.children.length>=8)return toast('الحد الأقصى 8 روابط.',true);list.append(socialRow());};
+$('#socialLinksList').addEventListener('click',e=>{const b=e.target.closest('[data-remove-social]');if(!b)return;b.closest('.link-row').remove();if(!$('#socialLinksList').children.length)$('#socialLinksList').append(socialRow());});
+async function saveSiteSetting(key,value){const {error}=await state.client.from('site_settings').upsert({setting_key:key,value,is_public:true,updated_by:state.user.id},{onConflict:'setting_key'});if(error)throw error;}
+function bindBrandForm(selector,key,build){const form=$(selector);form.addEventListener('submit',async e=>{e.preventDefault();if(state.role!=='owner')return toast('هذه الإعدادات متاحة للمالك فقط.',true);const button=$('button[type=submit]',form);setBusy(button,true);try{await saveSiteSetting(key,build(new FormData(form)));toast('تم الحفظ. حدّث الصفحة العامة لرؤية التغيير.');}catch(error){toast(`لم يتم الحفظ: ${error.message}`,true);}finally{setBusy(button,false);}});}
+const textValue=(fd,name)=>String(fd.get(name)||'').trim();
+bindBrandForm('#brandForm','site_brand',fd=>{const value={};['name_ar','name_en','first_name_en','last_name_ar','hero_ar','hero_en'].forEach(k=>value[k]=textValue(fd,k));if(!value.name_ar&&!value.name_en)throw new Error('أدخل الاسم بالعربية أو الإنجليزية على الأقل.');const image=textValue(fd,'hero_image_url');if(image&&!safeExternalUrl(image))throw new Error('رابط صورة الواجهة يجب أن يبدأ بـ http أو https.');value.hero_image_url=image;return value;});
+bindBrandForm('#seoForm','seo',fd=>({description_ar:textValue(fd,'description_ar'),description_en:textValue(fd,'description_en')}));
+bindBrandForm('#appearanceForm','appearance',fd=>{const value={};for(const k of ['cyan','violet','background']){const v=String(fd.get(k)||'').trim();if(!/^#[0-9a-fA-F]{6}$/.test(v))throw new Error('قيمة اللون غير صالحة.');value[k]=v;}return value;});
+bindBrandForm('#sceneForm','three_scene',fd=>{const scene=textValue(fd,'default_scene');const intensity=Number(fd.get('particle_intensity'));const model=textValue(fd,'model_url');if(model&&!safeExternalUrl(model))throw new Error('رابط الموديل يجب أن يبدأ بـ http أو https.');return{default_scene:sceneKeyList.includes(scene)?scene:'nova',particle_intensity:Math.min(1.6,Math.max(0.4,Number.isFinite(intensity)&&intensity?intensity:1)),model_url:model};});
+$('#saveSocialLinks').onclick=async e=>{if(state.role!=='owner')return toast('هذه الإعدادات متاحة للمالك فقط.',true);const button=e.currentTarget;setBusy(button,true);try{const links=[];$$('#socialLinksList .link-row').forEach(row=>{const label=row.querySelector('[data-social-label]').value.trim();const url=row.querySelector('[data-social-url]').value.trim();if(!label&&!url)return;if(!label||!url)throw new Error('كل رابط يحتاج اسمًا ورابطًا.');const safe=safeExternalUrl(url);if(!safe)throw new Error(`رابط «${label}» غير صالح.`);links.push({label:label.slice(0,40),url:safe});});await saveSiteSetting('social_links',{links});toast('تم حفظ روابط التواصل.');}catch(error){toast(`لم يتم الحفظ: ${error.message}`,true);}finally{setBusy(button,false);}};
 
 async function loadActivity(){if(!state.client)return;const {data,error}=await state.client.from('activity_logs').select('id,action,details,created_at').order('created_at',{ascending:false}).limit(100);if(error){$('#activityList').innerHTML=`<div class="empty-state">${escapeHTML(error.message)}</div>`;return;}$('#activityList').innerHTML=(data||[]).map(x=>`<div class="timeline-event"><i></i><div><strong>${escapeHTML(x.action)}</strong><small>${escapeHTML(JSON.stringify(x.details||{}))}</small></div><time>${dateLabel(x.created_at)}</time></div>`).join('')||'<div class="empty-state">لا توجد أحداث مسجلة بعد.</div>';}
 
