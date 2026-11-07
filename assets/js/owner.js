@@ -278,7 +278,7 @@ function editSetting(key){const record=state.siteSettings.find(x=>x.setting_key=
 $('#newSetting').onclick=()=>editSetting(null);$('#settingsList').addEventListener('click',async e=>{const edit=e.target.closest('[data-edit-setting]'),del=e.target.closest('[data-delete-setting]');if(edit)editSetting(edit.dataset.editSetting);if(del){if(!confirm(`حذف إعداد ${del.dataset.deleteSetting}؟`))return;const {error}=await state.client.from('site_settings').delete().eq('setting_key',del.dataset.deleteSetting);if(error)toast(error.message,true);else{toast('تم حذف الإعداد.');loadSettings();}}});
 
 const settingKeys = ['site_brand','social_links','seo','appearance','three_scene'];
-const sceneKeyList = ['nova','ai','engineering','code','creative','projects','future'];
+const sceneKeyList = ['me','nova','ai','engineering','code','creative','projects','future'];
 async function loadBrandSettings() {
  if(!state.client||state.role!=='owner')return;
  const {data,error}=await state.client.from('site_settings').select('setting_key,value').in('setting_key',settingKeys);
@@ -290,7 +290,7 @@ async function loadBrandSettings() {
  ['description_ar','description_en'].forEach(k=>{const el=$('#seoForm').elements.namedItem(k);if(el)el.value=seo[k]??'';});
  ['cyan','violet','background'].forEach(k=>{const el=$('#appearanceForm').elements.namedItem(k);if(el&&/^#[0-9a-fA-F]{6}$/.test(appearance[k]||''))el.value=appearance[k];});
  const sceneForm=$('#sceneForm');
- sceneForm.elements.namedItem('default_scene').value=sceneKeyList.includes(scene.default_scene)?scene.default_scene:'nova';
+ sceneForm.elements.namedItem('default_scene').value=sceneKeyList.includes(scene.default_scene)?scene.default_scene:'me';
  sceneForm.elements.namedItem('particle_intensity').value=Number(scene.particle_intensity)||1;
  sceneForm.elements.namedItem('model_url').value=scene.model_url||'';
  renderSocialLinks(Array.isArray(map.social_links?.links)?map.social_links.links:[]);
@@ -305,7 +305,7 @@ const textValue=(fd,name)=>String(fd.get(name)||'').trim();
 bindBrandForm('#brandForm','site_brand',fd=>{const value={};['name_ar','name_en','first_name_en','last_name_ar','hero_ar','hero_en'].forEach(k=>value[k]=textValue(fd,k));if(!value.name_ar&&!value.name_en)throw new Error('أدخل الاسم بالعربية أو الإنجليزية على الأقل.');const image=textValue(fd,'hero_image_url');if(image&&!safeExternalUrl(image))throw new Error('رابط صورة الواجهة يجب أن يبدأ بـ http أو https.');value.hero_image_url=image;return value;});
 bindBrandForm('#seoForm','seo',fd=>({description_ar:textValue(fd,'description_ar'),description_en:textValue(fd,'description_en')}));
 bindBrandForm('#appearanceForm','appearance',fd=>{const value={};for(const k of ['cyan','violet','background']){const v=String(fd.get(k)||'').trim();if(!/^#[0-9a-fA-F]{6}$/.test(v))throw new Error('قيمة اللون غير صالحة.');value[k]=v;}return value;});
-bindBrandForm('#sceneForm','three_scene',fd=>{const scene=textValue(fd,'default_scene');const intensity=Number(fd.get('particle_intensity'));const model=textValue(fd,'model_url');if(model&&!safeExternalUrl(model))throw new Error('رابط الموديل يجب أن يبدأ بـ http أو https.');return{default_scene:sceneKeyList.includes(scene)?scene:'nova',particle_intensity:Math.min(1.6,Math.max(0.4,Number.isFinite(intensity)&&intensity?intensity:1)),model_url:model};});
+bindBrandForm('#sceneForm','three_scene',fd=>{const scene=textValue(fd,'default_scene');const intensity=Number(fd.get('particle_intensity'));const model=textValue(fd,'model_url');if(model&&!safeExternalUrl(model))throw new Error('رابط الموديل يجب أن يبدأ بـ http أو https.');return{default_scene:sceneKeyList.includes(scene)?scene:'me',particle_intensity:Math.min(1.6,Math.max(0.4,Number.isFinite(intensity)&&intensity?intensity:1)),model_url:model};});
 $('#saveSocialLinks').onclick=async e=>{if(state.role!=='owner')return toast('هذه الإعدادات متاحة للمالك فقط.',true);const button=e.currentTarget;setBusy(button,true);try{const links=[];$$('#socialLinksList .link-row').forEach(row=>{const label=row.querySelector('[data-social-label]').value.trim();const url=row.querySelector('[data-social-url]').value.trim();if(!label&&!url)return;if(!label||!url)throw new Error('كل رابط يحتاج اسمًا ورابطًا.');const safe=safeExternalUrl(url);if(!safe)throw new Error(`رابط «${label}» غير صالح.`);links.push({label:label.slice(0,40),url:safe});});await saveSiteSetting('social_links',{links});toast('تم حفظ روابط التواصل.');}catch(error){toast(`لم يتم الحفظ: ${error.message}`,true);}finally{setBusy(button,false);}};
 
 async function loadActivity(){if(!state.client)return;const {data,error}=await state.client.from('activity_logs').select('id,action,details,created_at').order('created_at',{ascending:false}).limit(100);if(error){$('#activityList').innerHTML=`<div class="empty-state">${escapeHTML(error.message)}</div>`;return;}$('#activityList').innerHTML=(data||[]).map(x=>`<div class="timeline-event"><i></i><div><strong>${escapeHTML(x.action)}</strong><small>${escapeHTML(JSON.stringify(x.details||{}))}</small></div><time>${dateLabel(x.created_at)}</time></div>`).join('')||'<div class="empty-state">لا توجد أحداث مسجلة بعد.</div>';}
