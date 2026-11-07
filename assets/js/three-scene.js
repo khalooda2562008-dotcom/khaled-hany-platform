@@ -1,4 +1,5 @@
 const MODES = {
+  me: { color: 0xffffff, secondary: 0x5eead4, scale: 1.04, speed: 0.42, shape: 'custom' },
   nova: { color: 0xf7c66b, secondary: 0x5eead4, scale: 1.04, speed: 0.55, shape: 'sphere', galaxy: true },
   ai: { color: 0x67e8f9, secondary: 0xa78bfa, scale: 1, speed: 1, shape: 'icosa' },
   engineering: { color: 0x7dd3fc, secondary: 0x60a5fa, scale: 0.92, speed: 0.72, shape: 'octa' },
@@ -74,33 +75,62 @@ export async function createHeroScene(canvas, onFallback, options = {}) {
   const core = new THREE.Mesh(coreGeometry, coreMaterial);
   core.name = 'KhaledDigitalCore';
   coreGroup.add(core);
+  let personalGeometry = null;
+  let personalTexture = null;
+  let personalVertexColors = false;
   const stageLoading = document.getElementById('stageLoading');
   import('three/addons/loaders/GLTFLoader.js').then(({ GLTFLoader }) => {
     const loader = new GLTFLoader();
     const requestedModel = typeof options.modelUrl === 'string' && options.modelUrl.startsWith('https://') ? options.modelUrl : '';
-    const modelUrl = requestedModel || new URL('../models/khaled-digital-core.glb', import.meta.url).href;
-    loader.load(modelUrl, gltf => {
-      if (disposed) return;
+    const candidates = requestedModel
+      ? [requestedModel]
+      : [new URL('../models/me.glb', import.meta.url).href, new URL('../models/khaled-digital-core.glb', import.meta.url).href];
+    const disposeTree = root => root.traverse(object => {
+      if (object.geometry) object.geometry.dispose();
+      if (object.material) {
+        if (Array.isArray(object.material)) object.material.forEach(material => material.dispose());
+        else object.material.dispose();
+      }
+    });
+    const applyModel = gltf => {
+      if (disposed) { disposeTree(gltf.scene); return; }
       let sourceMesh = null;
-      gltf.scene.traverse(object => { if (!sourceMesh && object.isMesh) sourceMesh = object; });
-      if (mode !== 'nova' && sourceMesh?.geometry) {
-        core.geometry.dispose();
-        core.geometry = sourceMesh.geometry.clone();
+      gltf.scene.traverse(object => { if (!sourceMesh && object.isMesh && object.geometry) sourceMesh = object; });
+      if (sourceMesh?.geometry) {
+        const geometry = sourceMesh.geometry.clone();
+        geometry.computeBoundingBox();
+        const box = geometry.boundingBox;
+        const center = new THREE.Vector3();
+        const size = new THREE.Vector3();
+        box.getCenter(center);
+        box.getSize(size);
+        const maxDimension = Math.max(size.x, size.y, size.z) || 1;
+        const fit = 2.2 / maxDimension;
+        geometry.translate(-center.x, -center.y, -center.z);
+        geometry.scale(fit, fit, fit);
+        geometry.computeBoundingSphere();
         const sourceMaterial = Array.isArray(sourceMesh.material) ? sourceMesh.material[0] : sourceMesh.material;
-        if (sourceMaterial?.map) {
-          coreMaterial.map = sourceMaterial.map;
-          coreMaterial.map.colorSpace = THREE.SRGBColorSpace;
-          coreMaterial.metalness = sourceMaterial.metalness ?? coreMaterial.metalness;
-          coreMaterial.roughness = sourceMaterial.roughness ?? coreMaterial.roughness;
-          coreMaterial.needsUpdate = true;
-        }
+        personalGeometry = geometry;
+        personalTexture = sourceMaterial?.map || null;
+        personalVertexColors = Boolean(geometry.getAttribute('color'));
+        if (personalTexture) personalTexture.colorSpace = THREE.SRGBColorSpace;
+        if (mode === 'me') setMode('me');
       }
       if (stageLoading) stageLoading.hidden = true;
-      gltf.scene.traverse(object => { if (object.geometry) object.geometry.dispose(); if (object.material) { if (Array.isArray(object.material)) object.material.forEach(m => m.dispose()); else object.material.dispose(); } });
-    }, undefined, error => {
-      console.warn('[KhaledHany] GLB model could not load; using procedural geometry.', error);
-      if (stageLoading) stageLoading.hidden = true;
-    });
+      disposeTree(gltf.scene);
+    };
+    const loadFrom = index => {
+      if (disposed) return;
+      if (index >= candidates.length) {
+        if (stageLoading) stageLoading.hidden = true;
+        return;
+      }
+      loader.load(candidates[index], applyModel, undefined, () => {
+        console.warn('[KhaledHany] GLB model could not load; trying the next asset.', candidates[index]);
+        loadFrom(index + 1);
+      });
+    };
+    loadFrom(0);
   }).catch(error => {
     console.warn('[KhaledHany] GLTFLoader unavailable; using procedural geometry.', error);
     if (stageLoading) stageLoading.hidden = true;
@@ -270,10 +300,25 @@ export async function createHeroScene(canvas, onFallback, options = {}) {
     if (!modes[nextMode]) return;
     mode = nextMode;
     const style = modes[mode];
+    const personal = style.shape === 'custom';
     const color = new THREE.Color(style.color);
     const secondary = new THREE.Color(style.secondary);
-    coreMaterial.color.copy(color);
-    coreMaterial.emissive.copy(color).multiplyScalar(0.16);
+    if (personal) {
+      coreMaterial.map = personalTexture || null;
+      coreMaterial.vertexColors = personalVertexColors;
+      coreMaterial.color.set(0xffffff);
+      coreMaterial.emissive.set(0x000000);
+      coreMaterial.metalness = personalTexture ? 0.12 : 0.35;
+      coreMaterial.roughness = personalTexture ? 0.82 : 0.55;
+    } else {
+      coreMaterial.map = null;
+      coreMaterial.vertexColors = false;
+      coreMaterial.color.copy(color);
+      coreMaterial.emissive.copy(color).multiplyScalar(0.16);
+      coreMaterial.metalness = 0.78;
+      coreMaterial.roughness = 0.23;
+    }
+    coreMaterial.needsUpdate = true;
     const shapeGeometry = {
       sphere: () => new THREE.SphereGeometry(1.0, lowPower ? 40 : 64, lowPower ? 28 : 44),
       icosa: () => new THREE.IcosahedronGeometry(1.02, lowPower ? 2 : 3),
@@ -282,13 +327,14 @@ export async function createHeroScene(canvas, onFallback, options = {}) {
       torus: () => new THREE.TorusKnotGeometry(0.78, 0.28, lowPower ? 96 : 150, 10, 2, 3),
       dodeca: () => new THREE.DodecahedronGeometry(1.06, 1)
     };
-    const nextGeometry = (shapeGeometry[style.shape] || shapeGeometry.icosa)();
-    if (core.geometry) core.geometry.dispose();
+    const nextGeometry = personal ? (personalGeometry || new THREE.IcosahedronGeometry(1.0, lowPower ? 2 : 3)) : (shapeGeometry[style.shape] || shapeGeometry.icosa)();
+    if (core.geometry && core.geometry !== personalGeometry) core.geometry.dispose();
     core.geometry = nextGeometry;
     const globe = style.shape === 'sphere';
     if (shell.geometry) shell.geometry.dispose();
     shell.geometry = globe ? new THREE.SphereGeometry(1.26, lowPower ? 18 : 26, lowPower ? 12 : 18) : new THREE.IcosahedronGeometry(1.22, 2);
-    inner.visible = !globe;
+    shell.visible = !personal;
+    inner.visible = !globe && !personal;
     if (galaxy) galaxy.visible = Boolean(style.galaxy);
     rimLight.color.copy(color);
     violetLight.color.copy(secondary);

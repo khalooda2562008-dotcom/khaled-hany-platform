@@ -293,7 +293,7 @@ function applyPublicSettings(rows) {
       if (typeof description === 'string' && description.trim()) document.querySelector('meta[name="description"]')?.setAttribute('content',description.slice(0,300));
     }
     if (entry.setting_key === 'three_scene') {
-      if (['nova','ai','engineering','code','creative','projects','future'].includes(v.default_scene)) state.scene = v.default_scene;
+      if (['me','nova','ai','engineering','code','creative','projects','future'].includes(v.default_scene)) state.scene = v.default_scene;
       const candidate = safeExternalUrl(v.model_url);
       state.modelUrl = candidate && new URL(candidate).protocol === 'https:' ? candidate : '';
     }
@@ -391,6 +391,12 @@ async function setupContactForm() {
 
 async function initializeScene() {
   const canvas = $('#hero3d');
+  if (state.scene === 'me' && !state.modelUrl) {
+    try {
+      const probe = await fetch(new URL('./assets/models/me.glb', document.baseURI), { method: 'HEAD', cache: 'no-store' });
+      if (!probe.ok) state.scene = 'nova';
+    } catch { state.scene = 'nova'; }
+  }
   const fallback = message => {
     const node = document.createElement('div');
     node.className = 'webgl-fallback';
@@ -402,6 +408,7 @@ async function initializeScene() {
   const scene = await createHeroScene(canvas, fallback, { modelUrl: state.modelUrl });
   if (!scene) return;
   if (state.scene !== 'ai') scene.setMode(state.scene);
+  $$('.scene-option').forEach(option => option.classList.toggle('active', option.dataset.scene === state.scene));
   $$('.scene-option').forEach(button => button.addEventListener('click', () => {
     $$('.scene-option').forEach(option => option.classList.toggle('active', option === button));
     state.scene = button.dataset.scene;
