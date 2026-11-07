@@ -392,10 +392,17 @@ async function setupContactForm() {
 async function initializeScene() {
   const canvas = $('#hero3d');
   if (state.scene === 'me' && !state.modelUrl) {
-    try {
-      const probe = await fetch(new URL('./assets/models/me.glb', document.baseURI), { method: 'HEAD', cache: 'no-store' });
-      if (!probe.ok) state.scene = 'nova';
-    } catch { state.scene = 'nova'; }
+    const probes = [new URL('./assets/models/me.glb', document.baseURI).href];
+    if (location.hostname.endsWith('github.io')) {
+      const [user] = location.hostname.split('.');
+      const repo = location.pathname.split('/').filter(Boolean)[0];
+      if (user && repo) probes.push(`https://raw.githubusercontent.com/${user}/${repo}/main/assets/models/me.glb`);
+    }
+    let available = false;
+    for (const url of probes) {
+      try { const probe = await fetch(url, { method: 'HEAD', cache: 'no-store' }); if (probe.ok) { available = true; break; } } catch {}
+    }
+    if (!available) state.scene = 'nova';
   }
   const fallback = message => {
     const node = document.createElement('div');
