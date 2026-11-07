@@ -6,7 +6,7 @@
   <title>مركز المالك | KHALED HANY</title><link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../assets/css/owner.css">
   <script type="importmap">
-    {"imports":{"@supabase/supabase-js":"https://esm.sh/@supabase/supabase-js@2.119.0?bundle"}}
+    {"imports":{"@supabase/supabase-js":"../assets/vendor/supabase-js.mjs"}}
   </script>
 </head>
 <body>
@@ -17,7 +17,7 @@
       <label>البريد الإلكتروني<input name="email" type="email" autocomplete="username" required maxlength="254" placeholder="owner@example.com"></label>
       <label>كلمة المرور<input name="password" type="password" autocomplete="current-password" required minlength="8"></label>
       <button class="primary-button" type="submit" id="loginButton">تسجيل الدخول <span>↗</span></button>
-      <div class="notice" id="authNotice" role="status" aria-live="polite">لا يوجد حساب افتراضي أو كلمة مرور مُضمّنة. أكمل إعداد Supabase أولًا.</div>
+      <div class="notice" id="authNotice" role="status" aria-live="polite">أدخل بريد حساب المالك وكلمة المرور ثم اضغط تسجيل الدخول.</div>
       <a class="back-link" href="../">← العودة للموقع العام</a> · <a class="back-link" href="../account/">حساب المستخدم</a>
     </form>
   </div>

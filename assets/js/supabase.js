@@ -8,6 +8,12 @@ export const supabaseConfigured = Boolean(
 );
 
 let clientPromise;
+const FETCH_TIMEOUT_MS = 20000;
+const fetchWithTimeout = (input, init = {}) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  return fetch(input, { ...init, signal: controller.signal }).finally(() => clearTimeout(timer));
+};
 export async function getSupabase() {
   if (!supabaseConfigured) return null;
   if (!clientPromise) {
@@ -19,7 +25,10 @@ export async function getSupabase() {
           detectSessionInUrl: true,
           flowType: 'pkce'
         },
-        global: { headers: { 'x-client-info': 'khaled-hany-platform/1.0.0' } }
+        global: {
+          headers: { 'x-client-info': 'khaled-hany-platform/1.0.0' },
+          fetch: fetchWithTimeout
+        }
       });
     }).catch(error => {
       clientPromise = null;
