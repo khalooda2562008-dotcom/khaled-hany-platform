@@ -4,14 +4,9 @@ import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
-const html=read('index.html'),owner=read('owner/index.html'),account=read('account/index.html'),accountJs=read('account/account.js'),three=read('assets/js/three-scene.js'),app=read('assets/js/app.js'),ownerJs=read('assets/js/owner.js'),sql=read('supabase/migrations/202611060001_initial_schema.sql'),bootstrap=read('supabase/bootstrap/primary-owner.sql'),http=read('supabase/functions/_shared/http.ts'),contact=read('supabase/functions/contact/index.ts'),asset=read('supabase/functions/asset-search/index.ts'),invite=read('supabase/functions/invite-user/index.ts'),ai=read('supabase/functions/ai-assist/index.ts'),config=read('config.js');
+const html=read('index.html'),owner=read('owner/index.html'),account=read('account/index.html'),accountJs=read('account/account.js'),app=read('assets/js/app.js'),ownerJs=read('assets/js/owner.js'),sql=read('supabase/migrations/202611060001_initial_schema.sql'),bootstrap=read('supabase/bootstrap/primary-owner.sql'),http=read('supabase/functions/_shared/http.ts'),contact=read('supabase/functions/contact/index.ts'),asset=read('supabase/functions/asset-search/index.ts'),invite=read('supabase/functions/invite-user/index.ts'),ai=read('supabase/functions/ai-assist/index.ts'),config=read('config.js');
 assert.match(html,/<html lang="ar" dir="rtl">/);
-for(const id of ['home','about','education','skills','projects','content','journey','now','contact','hero3d']) assert.ok(html.includes(`id="${id}"`),`missing site section ${id}`);
-assert.match(three,/import\('three'\)/,'Three.js module import missing');
-assert.match(three,/new THREE\.WebGLRenderer/,'real WebGL renderer missing');
-assert.match(three,/new THREE\.PerspectiveCamera/,'perspective camera missing');
-assert.match(three,/renderer\.render\(scene, camera\)/,'scene render loop missing');
-assert.match(three,/let running = false/,'3D animation loop must begin stopped before start()');
+for(const id of ['home','about','education','skills','projects','content','journey','now','contact','heroPortrait']) assert.ok(html.includes(`id="${id}"`),`missing site section ${id}`);
 assert.match(html,/name="website"/,'contact honeypot missing');
 assert.match(owner,/id="loginForm"/);assert.match(ownerJs,/signInWithPassword/);assert.match(ownerJs,/from\('user_roles'\)/);
 assert.match(account,/id="authForm"/);assert.match(accountJs,/auth\.signUp/);assert.match(accountJs,/auth\.signInWithPassword/);assert.match(accountJs,/from\('profiles'\)\.update/);assert.doesNotMatch(accountJs,/user_roles.*\.update|role.*signUp/i);
@@ -23,6 +18,6 @@ assert.doesNotMatch(config,/service_role|RESEND_API_KEY|AI_API_KEY|PEXELS_API_KE
 assert.match(app,/functions\.invoke\('contact'/);assert.match(ownerJs,/functions\.invoke\('invite-user'/);assert.match(ownerJs,/functions\.invoke\('ai-assist'/);
 assert.match(asset,/createClient/);
 for (const source of [contact,asset,invite,ai]) { assert.match(source,/isAllowedOrigin\(req\)/); assert.match(source,/corsPreflight\(req\)/); assert.doesNotMatch(source,/Access-Control-Allow-Origin[^\n]*\*|\|\s*['"]\*['"]/); }
-assert.match(ownerJs,/data-archive-message/);assert.match(ownerJs,/data-use-hero/);assert.match(ownerJs,/searchCommons/);assert.match(ownerJs,/searchPolyhaven/);assert.match(ownerJs,/data-restore-revision/);assert.match(app,/hero_image_url/);assert.match(three,/options\.modelUrl/);
+assert.match(ownerJs,/data-archive-message/);assert.match(ownerJs,/data-use-hero/);assert.match(ownerJs,/searchCommons/);assert.match(ownerJs,/data-restore-revision/);assert.match(app,/hero_image_url/);assert.match(app,/loadHeroPhoto/);assert.doesNotMatch(app,/three-scene/);assert.doesNotMatch(html,/three@/);assert.doesNotMatch(html,/hero3d/);
 assert.ok(!html.includes('href="https://YOUR-DOMAIN.example'), 'Replace domain placeholders before SEO launch.');
-console.log('Smoke tests passed: bilingual site/account routes, Three.js renderer, owner CMS, owner bootstrap, strict Edge Function origins, editor RLS, audit triggers and secret separation.');
+console.log('Smoke tests passed: bilingual site/account routes, photo hero, owner CMS, owner bootstrap, strict Edge Function origins, editor RLS, audit triggers and secret separation.');

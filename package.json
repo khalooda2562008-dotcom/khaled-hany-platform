@@ -2,7 +2,7 @@
   "name": "khaled-hany-digital-identity",
   "version": "1.0.0",
   "private": true,
-  "description": "Bilingual personal digital identity with a real Three.js WebGL scene and an optional Supabase CMS backend.",
+  "description": "Bilingual personal digital identity site with a portrait hero image and an optional Supabase CMS backend.",
   "type": "module",
   "scripts": {
     "dev": "node tools/serve.mjs",
@@ -12,8 +12,7 @@
     "build": "node tools/build.mjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "2.119.0",
-    "three": "0.187.0"
+    "@supabase/supabase-js": "2.119.0"
   },
   "engines": {
     "node": ">=20.0.0"

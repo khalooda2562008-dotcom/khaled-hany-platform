@@ -1,4 +1,3 @@
-import { createHeroScene } from './three-scene.js';
 import { getSupabase, supabaseConfigured, safeExternalUrl } from './supabase.js';
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -7,8 +6,7 @@ const state = {
   lang: localStorage.getItem('kh-lang') === 'en' ? 'en' : 'ar',
   light: localStorage.getItem('kh-theme') === 'light',
   motion: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  scene: 'nova',
-  modelUrl: '',
+  heroImage: '',
   projects: [],
   sectionRows: [], skills: [], education: [], journey: [], goals: [], contentItems: [], publicSettings: []
 };
@@ -32,6 +30,8 @@ function applyLanguage() {
   });
   const title = state.lang === 'ar' ? 'خالد هاني | هويتي الرقمية' : 'Khaled Hany | Digital Identity';
   document.title = title;
+  const heroPhoto = $('#heroPhoto');
+  if (heroPhoto && state.heroImage) heroPhoto.alt = state.lang === 'ar' ? 'صورة خالد هاني' : 'Khaled Hany portrait';
   if (state.sectionRows.length) applySectionRows(state.sectionRows);
   if (state.skills.length) renderSkills(state.skills);
   if (state.education.length) renderEducation(state.education);
@@ -270,9 +270,7 @@ function applyPublicSettings(rows) {
     const v = entry.value || {};
     if (entry.setting_key === 'site_brand') {
       const lead = $('.hero-lead'); if (lead && (v.hero_ar || v.hero_en)) lead.textContent = state.lang === 'ar' ? (v.hero_ar || v.hero_en) : (v.hero_en || v.hero_ar);
-      const heroImage = safeExternalUrl(v.hero_image_url);
-      const heroStage = $('#sceneWrap');
-      if (heroImage && heroStage) heroStage.style.backgroundImage = `linear-gradient(135deg, rgba(7,10,18,.78), rgba(7,10,18,.42)), url(${JSON.stringify(heroImage)})`;
+      loadHeroPhoto(safeExternalUrl(v.hero_image_url));
       if (v.name_ar || v.name_en) {
         document.title = state.lang === 'ar' ? `${v.name_ar || v.name_en} | هويتي الرقمية` : `${v.name_en || v.name_ar} | Digital Identity`;
         const englishBrand = v.name_en || 'Khaled Hany';
@@ -291,11 +289,6 @@ function applyPublicSettings(rows) {
     if (entry.setting_key === 'seo') {
       const description = state.lang === 'ar' ? v.description_ar : (v.description_en || v.description_ar);
       if (typeof description === 'string' && description.trim()) document.querySelector('meta[name="description"]')?.setAttribute('content',description.slice(0,300));
-    }
-    if (entry.setting_key === 'three_scene') {
-      if (['me','nova','ai','engineering','code','creative','projects','future'].includes(v.default_scene)) state.scene = v.default_scene;
-      const candidate = safeExternalUrl(v.model_url);
-      state.modelUrl = candidate && new URL(candidate).protocol === 'https:' ? candidate : '';
     }
     if (entry.setting_key === 'social_links' && Array.isArray(v.links)) {
       const target = $('.contact-intro');
@@ -389,40 +382,32 @@ async function setupContactForm() {
   });
 }
 
-async function initializeScene() {
-  const canvas = $('#hero3d');
-  if (state.scene === 'me' && !state.modelUrl) {
-    const probes = [new URL('./assets/models/me.glb', document.baseURI).href];
-    if (location.hostname.endsWith('github.io')) {
-      const [user] = location.hostname.split('.');
-      const repo = location.pathname.split('/').filter(Boolean)[0];
-      if (user && repo) probes.push(`https://raw.githubusercontent.com/${user}/${repo}/main/assets/models/me.glb`);
-    }
-    let available = false;
-    for (const url of probes) {
-      try { const probe = await fetch(url, { method: 'HEAD', cache: 'no-store' }); if (probe.ok) { available = true; break; } } catch {}
-    }
-    if (!available) state.scene = 'nova';
+const localHeroImages = ['./assets/images/me.jpg', './assets/images/me.jpeg', './assets/images/me.png', './assets/images/me.webp'];
+
+async function loadHeroPhoto(preferredUrl = '') {
+  const frame = $('#heroPortrait');
+  const image = $('#heroPhoto');
+  if (!frame || !image) return;
+  const candidates = preferredUrl ? [preferredUrl, ...localHeroImages] : localHeroImages;
+  for (const candidate of candidates) {
+    let resolved;
+    try { resolved = new URL(candidate, document.baseURI).href; } catch { continue; }
+    try {
+      const probe = await fetch(resolved, { method: 'HEAD', cache: 'no-store' });
+      if (!probe.ok) continue;
+    } catch { continue; }
+    if (state.heroImage === resolved && !image.hidden) return;
+    image.src = resolved;
+    image.alt = state.lang === 'ar' ? 'صورة خالد هاني' : 'Khaled Hany portrait';
+    image.hidden = false;
+    frame.classList.add('has-photo');
+    state.heroImage = resolved;
+    return;
   }
-  const fallback = message => {
-    const node = document.createElement('div');
-    node.className = 'webgl-fallback';
-    const strong = document.createElement('strong');
-    strong.textContent = '3D scene unavailable';
-    node.append(strong, document.createTextNode(message));
-    canvas.replaceWith(node);
-  };
-  const scene = await createHeroScene(canvas, fallback, { modelUrl: state.modelUrl });
-  if (!scene) return;
-  if (state.scene !== 'ai') scene.setMode(state.scene);
-  $$('.scene-option').forEach(option => option.classList.toggle('active', option.dataset.scene === state.scene));
-  $$('.scene-option').forEach(button => button.addEventListener('click', () => {
-    $$('.scene-option').forEach(option => option.classList.toggle('active', option === button));
-    state.scene = button.dataset.scene;
-    scene.setMode(state.scene);
-  }));
-  window.addEventListener('kh-motion-change', event => event.detail.enabled ? scene.resume() : scene.pause());
-  window.addEventListener('pagehide', () => scene.dispose(), { once: true });
+  image.hidden = true;
+  image.removeAttribute('src');
+  frame.classList.remove('has-photo');
+  state.heroImage = '';
 }
 
 async function boot() {
@@ -431,9 +416,9 @@ async function boot() {
   applyLanguage();
   setupProjectFilters();
   renderProjects();
+  await loadHeroPhoto();
   if (supabaseConfigured) await loadPublishedData();
   await setupContactForm();
-  await initializeScene();
 }
 
 boot().catch(error => {

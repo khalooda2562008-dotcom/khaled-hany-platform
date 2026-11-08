@@ -1,13 +1,12 @@
 # KHALED HANY — Next-Generation Digital Identity
 
-A bilingual Arabic/English personal website built from the supplied original `index.html`, enhanced with a real Three.js/WebGL experience, and paired with an optional Supabase CMS/owner console.
+A bilingual Arabic/English personal website built from the supplied original `index.html`, enhanced with a portrait hero image, and paired with an optional Supabase CMS/owner console.
 
 ## What is included
 
 - Preserved personal identity and original useful content: Al-Azhar AI student, interests in programming/software engineering/content creation, education, current learning goals and journey.
 - Arabic RTL and English LTR, responsive navigation, dark/light themes, reduced-motion support and keyboard-visible focus.
-- Actual Three.js `WebGLRenderer`, perspective camera, 3D lights/materials, pointer/touch response, six shape/mode variations, scene pause/resume, visibility-based render suspension and mobile pixel-ratio limits.
-- Locally included generated GLB centerpiece (`assets/models/khaled-digital-core.glb`) with a generated surface texture (`assets/textures/core-surface.png`). The scene also creates orbit rings, satellite meshes and particle geometry procedurally.
+- Portrait hero image (`assets/images/me.jpg` or the `site_brand.hero_image_url` setting) with a styled “KH” fallback, plus theme, language and reduced-motion controls.
 - Optional authenticated `/owner/` control center with role verification, bilingual content editing, projects, skills, education, journey milestones, goals, content/media items, uploads, contact inbox with archive/read/delete, role invitations, settings, activity history and revision rollback.
 - `/account/` self-service user account for signup/login and editing only the signed-in user’s profile; ordinary visitors cannot grant themselves roles.
 - Supabase SQL migration with tables, triggers, Row Level Security (RLS), single-primary-owner constraint, a protected owner role RPC, storage bucket policies and contact rate limiting.
@@ -18,9 +17,9 @@ A bilingual Arabic/English personal website built from the supplied original `in
 
 This ZIP is a complete source package, not a deployed production service. No Supabase project, account, domain, API keys, email sender, or external provider credentials were supplied, so those services cannot be live from inside this archive. The `config.js` values are intentionally blank. No owner password is generated or embedded.
 
-The Three.js/WebGL scene and a GLB model are implemented in source. Browser execution of the remote Three.js/GLTFLoader/Supabase modules requires internet access because this package uses version-pinned browser import maps. In an environment that blocks CDN requests, the page remains readable and the 3D area shows a fallback; the model and texture files themselves are local. A real browser/WebGL run against the public CDN and a configured Supabase instance is still required before production acceptance.
+The hero portrait is a normal image: put `me.jpg` (or `.jpeg`, `.png`, `.webp`) in `assets/images/`, or upload one from the owner console, and it appears automatically. If no image is found the page shows a styled “KH” placeholder instead of a broken frame. A configured Supabase instance is still required before production acceptance.
 
-Provider search works through documented APIs only: Wikimedia Commons and Poly Haven are directly searched by the owner UI; Unsplash, Pexels and Pixabay are optional server-side integrations and return a missing-credential message until their secrets are configured. Imported source references retain the provider, source URL, creator and license label. A reference being saved is not a substitute for reviewing the asset's exact license and attribution obligations. The UI does not silently download arbitrary third-party media or assert that every API result is cleared for every use.
+Provider search works through documented APIs only: Wikimedia Commons is searched directly by the owner UI; Unsplash, Pexels and Pixabay are optional server-side integrations and return a missing-credential message until their secrets are configured. Imported source references retain the provider, source URL, creator and license label. A reference being saved is not a substitute for reviewing the asset's exact license and attribution obligations. The UI does not silently download arbitrary third-party media or assert that every API result is cleared for every use.
 
 No professional history, project outcomes, certificates, follower counts, social links, email address, or other unverified personal facts were invented. The initial projects list is empty on purpose. The original site remains in `original-source/index.original.html` for comparison; do not deploy that audit copy.
 
@@ -119,7 +118,7 @@ Before launch, replace `YOUR-DOMAIN.example` in `robots.txt` and `sitemap.xml` w
 - **Media library:** upload files to the public `site-media` bucket or save a sourced asset reference with its creator/license metadata. Uploads are limited to 50 MB; SVG script/event-handler content is rejected by the client UI, but production uploads should also be scanned server-side.
 - **Messages:** search, mark read/unread, archive/unarchive and delete contact messages directly from the owner inbox.
 - **Users:** invite users by email and assign `registered_user`, `editor` or `administrator`; owner role cannot be granted through the ordinary UI.
-- **Settings:** store public website JSON settings such as `site_brand`, `appearance`, `seo`, `three_scene` and `social_links`. Keep API secrets exclusively in Edge Function secrets, never in this table.
+- **Settings:** store public website JSON settings such as `site_brand`, `appearance`, `seo` and `social_links`. Keep API secrets exclusively in Edge Function secrets, never in this table.
 - **Revision history:** previous versions are captured for sections, projects, content items, skills, education entries, journey milestones and personal goals. Administrators/owner can inspect and restore supported versions; each restore itself creates a new revision.
 
 ## 6. Testing
@@ -130,7 +129,6 @@ npm run verify
 
 This runs required-file checks, JavaScript syntax/source smoke tests and creates a checked static `dist/` build. It does not replace:
 - a browser test on real Android hardware and a desktop browser,
-- an actual WebGL2 rendering test with the CDN reachable,
 - a Supabase auth/RLS integration test with the project configured,
 - live Edge Function tests with provider secrets,
 - a production Lighthouse / Core Web Vitals run,
@@ -153,10 +151,8 @@ Use the backup/export features available in your Supabase plan for database reco
 ├── config.js.example
 ├── assets/
 │   ├── css/                  # public site and owner console styles
-│   ├── js/                   # Three.js scene, public app, Supabase and owner app
-│   ├── models/               # generated GLB centerpiece
-│   ├── textures/             # generated PBR base-color texture
-│   ├── images/               # social preview artwork
+│   ├── js/                   # public app, Supabase and owner app
+│   ├── images/               # hero photo (me.jpg) and social preview artwork
 │   └── icons/
 ├── supabase/
 │   ├── migrations/
@@ -173,9 +169,8 @@ Use the backup/export features available in your Supabase plan for database reco
 
 ## License and source notes
 
-- Site code and project-generated GLB/texture/SVG artwork: project-specific original assets, authored for this delivery.
-- Three.js and Supabase JS are loaded at pinned CDN versions using import maps; their licenses remain with their respective upstream projects.
-- Poly Haven assets are CC0 according to the provider's asset terms. Still save the asset ID/source and re-check the exact current record when importing.
+- Site code and project-generated SVG artwork: project-specific original assets, authored for this delivery.
+- Supabase JS is loaded locally from `assets/vendor/`; its license remains with the upstream project.
 - Wikimedia Commons licensing varies per file. Review each individual file page and attribution requirements.
 - Unsplash, Pexels and Pixabay are optional providers. Their own terms and API requirements apply; the returned `license` field is a reminder to verify, not an independent legal clearance.
 - No binary font files from the system were copied into the archive. Typography uses a system font stack; see `fonts/README.md` before adding licensed local fonts.

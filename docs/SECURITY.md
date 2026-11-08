@@ -30,7 +30,7 @@ The initial database policy grants `owner_set_role` only to the primary owner. T
 7. Use a dedicated, verified sending domain for Resend; review message retention and delete/archive policy.
 8. Configure backups and test a restore. Store database dumps and media backups encrypted and outside version control.
 9. Review CSP and third-party CDN allowances for your final hosting setup. The static `_headers` file sets baseline headers but does not replace an explicit, tested Content-Security-Policy.
-10. Run dependency/security audits when upgrading Three.js, Supabase JS, Deno functions or the host runtime.
+10. Run dependency/security audits when upgrading Supabase JS, Deno functions or the host runtime.
 
 ## Database policies to test
 

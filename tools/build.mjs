@@ -20,8 +20,7 @@ fs.writeFileSync(path.join(dist, '.nojekyll'), '');
 
 const required = [
   'index.html', 'owner/index.html', 'account/index.html', 'account/account.js', 'account/account.css', 'config.js',
-  'assets/js/app.js', 'assets/js/three-scene.js',
-  'assets/models/khaled-digital-core.glb', 'assets/textures/core-surface.png'
+  'assets/js/app.js', 'assets/js/supabase.js', 'assets/images'
 ];
 const missing = required.filter(item => !fs.existsSync(path.join(dist, item)));
 if (missing.length) throw new Error(`Deployment output is incomplete: ${missing.join(', ')}`);
