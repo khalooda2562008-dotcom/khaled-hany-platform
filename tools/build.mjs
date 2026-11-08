@@ -16,6 +16,8 @@ for (const entry of publicFiles) {
   if (!fs.existsSync(source)) throw new Error(`Required deployment input is missing: ${entry}`);
   fs.cpSync(source, path.join(dist, entry), { recursive: true });
 }
+// The public site no longer uses 3D assets; keep any uploaded models out of the deployment.
+fs.rmSync(path.join(dist, 'assets', 'models'), { recursive: true, force: true });
 fs.writeFileSync(path.join(dist, '.nojekyll'), '');
 
 const required = [
